@@ -16,3 +16,4 @@
     - ETH-USD.csv
     - index.ipynb
   - Report.tex
+Our notion page for timeline and note taking: https://www.notion.so/Final-Project-76cffee0a5ea488c935aa878bcfff675
