@@ -10,7 +10,7 @@ This project uses various machine learning and deep learning algorithms to predi
 
 1. Each member will create a new branch from the main branch following the naming convention: MSSV_FULLNAME. Each folder will be assigned to a specific student.
 
-**Project Structure:**
+**Project Structure:** <br/>
 main
   - README.md
   - BITCOIN
