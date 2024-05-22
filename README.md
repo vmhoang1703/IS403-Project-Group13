@@ -1,19 +1,28 @@
-### This is the final project source code for class IS403 of IS403.O21.HTCL by lecturer Nguyen Dinh Thuan ###
+### Final Project Source Code for IS403.O21.HTCL - IS403
 
-**Introduction:** Our topic is to use different machine learning and deep learning algorithms to predict the price of three different cryptocurrencies: Ethereum, Bitcoin, and Binance.
+**Lecturer:** Nguyen Dinh Thuan
 
-**Process of Doing This Project:** Each member will checkout a new branch based on the main branch with the naming convention: MSSV_FULLNAME. Each folder will be in charge of one student.
+**Introduction:**
 
-- main
+This project uses various machine learning and deep learning algorithms to predict the prices of three cryptocurrencies: Ethereum, Bitcoin, and Binance Coin (BNB).
+
+**Project Process:**
+
+1. Each member will create a new branch from the main branch following the naming convention: MSSV_FULLNAME. Each folder will be assigned to a specific student.
+
+**Project Structure:**
+main
   - README.md
   - BITCOIN
     - BTC-USD.csv
     - index.ipynb
   - BINANCE
     - BNB-HISTORICAL-DATA.csv
-    - index.inpynb
+    - index.ipynb
   - ETHEREUM
     - ETH-USD.csv
     - index.ipynb
   - Report.tex
-Our notion page for timeline and note taking: https://www.notion.so/Final-Project-76cffee0a5ea488c935aa878bcfff675
+**Collaboration:**
+
+Our Notion page for project timeline and note taking: https://www.notion.so/Final-Project-76cffee0a5ea488c935aa878bcfff675
