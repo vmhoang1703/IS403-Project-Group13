@@ -1,0 +1,158 @@
+\documentclass{ieeeojies}
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{array}
+\usepackage[table]{xcolor}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage{float}
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\begin{document}
+\title{CRYPTOCURRENCY PREDICTION USING MACHINE LEARNING}
+
+\author{\uppercase{VU MINH HOANG}\authorrefmark{1},
+\uppercase{DUONG HUY HOANG\authorrefmark{2}, and TRAN THI MINH CHAU}\authorrefmark{3}}
+
+\address[1]{Faculty of Information Systems, University of Information Technology, 21520244@gm.uit.edu.vn}
+\address[1]{Faculty of Information Systems, University of Information Technology, 21522087@gm.uit.edu.vn}
+\address[1]{Faculty of Information Systems, University of Information Technology, 21521888@gm.uit.edu.vn}
+
+\markboth
+{Author \headeretal: VU MINH HOANG, DUONG HUY HOANG, TRAN THI MINH CHAU}
+{Author \headeretal: VU MINH HOANG, DUONG HUY HOANG, TRAN THI MINH CHAU}
+
+\begin{abstract}
+\end{abstract}
+
+\begin{keywords}
+\end{keywords}
+
+\titlepgskip=-15pt
+
+\maketitle
+
+\section{Introduction}
+\label{sec:introduction}
+In the volatile world of cryptocurrency trading, predicting price movements has become increasingly vital for both investors and traders. This study aims to address the challenging task of forecasting cryptocurrency prices based on historical data. The primary problem we tackle is to use the past ten days of historical data to predict the price of a cryptocurrency for the subsequent day. To achieve this, we explore a variety of machine learning and statistical forecasting methods. These methods include Linear Regression, Long Short-Term Memory (LSTM), SARIMAX (Seasonal AutoRegressive Integrated Moving Average with eXogenous factors), Recurrent Neural Network (RNN), Gated Recurrent Unit (GRU), Stacking Model, Autoregressive Transformer (Automformer), and ARIMA (AutoRegressive Integrated Moving Average). Our dataset encompasses historical data of three major cryptocurrencies: Bitcoin, Ethereum, and Binance. It includes five key attributes: Date, Price, Open, High, Low, Volume, and Change(\%), covering a period from March 1, 2019, to March 1, 2024.
+
+\section{Related Works}
+
+In recent studies, various machine learning approaches have been employed to predict cryptocurrency prices. One study utilized supervised regression, specifically random forest regression and LSTM models, trained using Python libraries sklearn and keras, respectively, to forecast Bitcoin prices \cite{b1}. Another research employed three algorithmic models, namely LSTM, SVM, and Polynomial Regression, with mean square error as the key determinant \cite{b2}. Additionally, a paper focused on Ethereum (ETH) price prediction integrated Technical Analysis (TA) indicators, social media trends, and transaction network properties into two models: a Base Model and a Full Model. The Full Model, which incorporated network properties like degree centrality and betweenness centrality, demonstrated superior predictive performance compared to the Base Model, highlighting the significance of network properties in forecasting cryptocurrency prices \cite{b3}.
+
+\section{Materials}
+\subsection{Dataset}
+\begin{table}[H]
+\centering
+\begin{tabular}{l l}
+ \textbf{Feature} & \textbf{Definition} \\ \\
+ Date & Date \\ \\
+ Open & Opening prices\\ \\
+ High & Highest prices during the day \\ \\
+ Low & Lowest prices during the day\\ \\
+ Volume & Trading volume in the day\\ \\
+Price & The closing price\\ \\
+ Change(\%) & Percentage change in Bitcoin's price from the previous day\\
+\end{tabular}
+\end{table}
+\subsection{Descriptive Statistics}
+\begin{table}[H]
+\caption{Bitcoin, Ethereum, Solana Descriptive Statistics}
+\end{table}
+\section{Methodology}
+\subsection{Long Short Term Memory}\\
+Long Short-Term Memory network is a recurrent neural network (RNN), aimed at dealing with the vanishing gradient problem present in traditional RNNs. Its relative insensitivity to gap length is its advantage over other RNNs, hidden Markov models and other sequence learning methods. It aims to provide a short-term memory for RNN that can last thousands of timesteps, thus "long short-term memory".
+
+\begin{align*}
+X &= \begin{bmatrix}
+    x_t \\
+    h_{t-1}
+\end{bmatrix} \\
+f_t &= \sigma(W_f \cdot X + b_f) \\
+i_t &= \sigma(W_i \cdot X + b_i) \\
+o_t &= \sigma(W_o \cdot X + b_o) \\
+\tilde{C}_t &= \tanh(W_c \cdot [h_{t-1}, x_t] + b_c) \\
+C_t &= f_t \odot C_{t-1} + i_t \odot \tilde{C}_t \\
+h_t &= o_t \odot \tanh(C_t)
+\end{align*}
+\subsection{Seasonal AutoRegressive Integrated Moving Average with eXogenous
+factors (SARIMAX)}\\
+SARIMAX is a statistical model designed to capture and forecast the underlying patterns, trends, and seasonality in such data
+\subsection{Recurrent Neural Network (RNN)}\\
+Recurrent Neural Network(RNN) is a type of Neural Network where the output from the previous step is fed as input to the current step.
+\subsection{Gated Recurrent Unit}
+The GRU is like a long short-term memory (LSTM) with a gating mechanism to input or forget certain features, but lacks a context vector or output gate, resulting in fewer parameters than LSTM.
+\subsection{Stacking Model}
+Stacking or stacked generalization is an ensemble machine learning algorithm. The main idea of stacking model is that we combine multiple weak models to enhance the accuracy of prediction. This algorithm consists of two parts: base model and meta model. Meta model use output from base model to produce the best result.\\ \\
+\includegraphics[scale=0.3]{Architecture of stacking model.png}
+\subsection{AutoRegressive Transformer}
+
+\subsection{AutoRegressive Integrated
+Moving Average (ARIMA)} 
+ARIMA is a model used for time series analysis and forecasting. The model is used on time series data which will be transformed into a stationary time series; the predictions are a linear regression upon features including time differences and moving averages. The implementation used is from the Statsmodels package (Seabold and Perktold, 2010). In ARIMA, the data is difference that is, the price features are transformed to the difference between prices.
+\begin{equation*}
+(1 - \sum_{k=1}^{p} \alpha_k L^k)(1 - L^d)X_t = (1 - \sum_{k=1}^{q} \beta_k L^k) \varepsilon_t
+\end{equation*}
+Let L be the lag operator, in the above equation and p,d,q are hyper-parameters over which we optimized.At each time t, we train a model using the price history to predict the price at time t and use the sign of the change in price as a prediction.
+\subsection{Linear Regression}
+ Linear regression is a statistical model which estimates the linear relationship between a scalar response and one or more explanatory variables (also known as dependent and independent variables)
+ \[Y=\beta_0+\beta_1X_1+\beta_2X_2+\cdots+\beta_kX_k+\varepsilon\]
+Where:\\
+	\indent\textbullet\ Y is the dependent variable (Target Variable).\\
+	\indent\textbullet\ \(X_1, X_2, \ldots, X_k\) are the independent (explanatory) variables.\\
+	\indent\textbullet\ \(\beta_0\) is the intercept term.\\
+	\indent\textbullet\ \(\beta_1,..., \beta_k\) are the regression coefficients for the independent variables.\\
+	\indent\textbullet\ \(\varepsilon\) is the error term.
+ \subsection{Preprocessing}
+ \textbullet\ data transform \\
+ \textbullet\ data scaling
+ \subsection{Look-Back window}
+\section{Result}
+
+\subsection{Evaluation Methods}
+\textbf{Mean absolute error} (MAE): 
+The Mean Absolute Error is the average of all absolute errors. The formula is:\\
+\[MAE = \frac{1}{n} \sum_{i=1}^{n} | y_i - \hat{y}_i |\]\\
+  
+\textbf{Root mean squared error} (RMSE): The Root Mean Absolute Error is the standard deviation of the residuals (prediction errors). The formula is: \\
+\[RMSE=\sqrt{\sum_{i=1}^{n} \frac{(\hat{y_i}-y_i )^2}{n} }\]\\
+\textbf{Mean Absolute Percentage Error} (MAPE): The Mean Absolute Percentage Error is a measure of prediction accuracy of a forecasting method. The formula is:  \\
+\[MAPE=\frac{1}{n}\sum_{i=1}^{n} \frac{|y_i-\hat{y}_i|}{y_i}\]
+Where: \\
+	\indent\textbullet\ \(n\) is the number of observations in the dataset.\\
+	\indent\textbullet\ \(y_i\)  is the true value.\\
+	\indent\textbullet\ \(\hat{y_i}\) is the predicted value.
+ \subsection{Bitcoin}
+\subsection{Ethereum}
+\subsection{Solana}
+\section{Conclusion}
+\subsection{Summary}
+
+\subsection{Future Considerations}
+
+\section*{Acknowledgment}
+\addcontentsline{toc}{section}{Acknowledgment}
+
+%% UNCOMMENT these lines below (and remove the 2 commands above) if you want to embed the bibliografy.
+\begin{thebibliography}{00}
+\bibitem{b1} Giffary, Novan Fauzi Al,  "Prediction Of Cryptocurrency Prices Using LSTM, SVM And Polynomial Regression", 2024.
+\bibitem{b2} Chen, Wei, "Analysis of Bitcoin Price Prediction Using Machine Learning", 2023.
+\bibitem{b3} Grande, Mar, "The predictive power of the Blockhain transaction networks: Towards a new generation of network science market indicators", 2023.
+\bibitem{b4} Cayir, Aykut, Kozan, Ozan, Dag, Tuge, Yenidoğan, Işıl, Arslan, Çiğdem, "Bitcoin Forecasting Using ARIMA and PROPHET", 2018-09-20.
+\bibitem{b5} Chen, Zheshi, Li, Chunhong,"Bitcoin price prediction using machine learning: An approach to sample dimension engineering", 2020-02-01
+\bibitem{b6}Amirzadeh, Rasoul, Nazari, Asef, Thiruvady, Dhananjay, Ee, Mong Shan, "Causal Feature Engineering of Price Directions of Cryptocurrencies using Dynamic Bayesian Networks", 2023-06-13.
+\bibitem{b7} Livieris, Ioannis E., Pintelas, Emmanuel, Stavroyiannis, Stavros, Panagiotis "Ensemble Deep Learning Models for Forecasting Cryptocurrency Time-Series"
+\bibitem{b8} "Forecasting Stock Market Prices Using Machine Learning and Deep Learning Models: A Systematic Review, Performance Analysis and Discussion of Implications"
+\bibitem{b9} "Stock Closing Price Prediction using Machine Learning Techniques"
+\end{thebibliography}
+%%%%%%%%%%%%%%%
+
+
+\EOD
+
+\end{document}
