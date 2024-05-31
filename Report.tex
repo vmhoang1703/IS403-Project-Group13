@@ -89,16 +89,35 @@ Where:\\
 \includegraphics[scale=0.4]{images/Screenshot-from-2021-03-16-15-51-05.png}
 \subsection{Seasonal AutoRegressive Integrated Moving Average with eXogenous
 factors (SARIMAX)}\\
-SARIMAX model is an abbreviation for Seasonal Autoregressive Integrated Moving Average or Seasonal ARIMA and belongs to the family of the ARIMA model. It is mentioned in that the SARIMAX model is capable of handling time series data that has a single variable along with seasonality. Apart from the hyperparameters for ARIMA, three different hyperparameters namely the AutoRegression (AR), Integrated (I), and Moving Average (MA) for the seasonal part of the series along with one parameter for the period of the seasonality. Just adding X (an exogenous variable) in the SARIMA model makes it SARIMAX. 
+While ARIMA is famous, it has limitations in handling seasonal fluctuation and external factors, which are common in time series data. SARIMAX model is an abbreviation for Seasonal Autoregressive Integrated Moving Average or Seasonal ARIMA and belongs to the family of the ARIMA model. It is mentioned in that the SARIMAX model is capable of handling time series data that has a single variable along with seasonality. Apart from the hyperparameters for ARIMA, three different hyperparameters namely the AutoRegression (AR), Integrated (I), and Moving Average (MA) for the seasonal part of the series along with one parameter for the period of the seasonality. Just adding X (an exogenous variable) in the SARIMA model makes it SARIMAX. Sarimax is denoted as SARIMAX(p,d,q)(P,D,Q,S) where P,D,Q represents the element of AR, differencing, and MA components respectively, while S represents periodicity of the seasons.
+\begin{flalign*}
+& (1 - \sum_{i=1}^p \phi_i L^i)(1 - \sum_{i=1}^P \Phi_i L^{iS}) \times (1 - L)(1 - L^S)^D Y_t && \\
+& = (1 + \sum_{i=1}^q \theta_i L^i)(1 + \sum_{i=1}^Q \Theta_i L^{iS}) \varepsilon_t + \beta X_t &&
+\end{flalign*}
+Where: \\
+\indent \textbullet\ P: the order of auto-regressive.\\
+\indent \textbullet\ Q: the order of moving average.\\
+\indent \textbullet\ D: the degree of differencing.\\
+\indent \textbullet\ S: the periodicity of the seasons.\\
+\indent \textbullet\ \(\Theta\): the seasonal AR paramater.\\
+\indent \textbullet\ \(\Phi\): the seasonal MA parameter.\\
+
+
+
+
+
+
 \subsection{Recurrent Neural Network (RNN)}\\
 Recurrent Neural Network(RNN) is a type of Neural Network where the output from the previous step is fed as input to the current step.
 \subsection{Gated Recurrent Unit}
 Gated Recurrent Units (GRUs) are a type of RNN that were introduced by in 2014 as an improvement over the traditional LSTM networks. Like LSTMs, GRUs are designed to be able to process input sequences of arbitrary length and maintain a state that encodes information about the past. However, unlike LSTMs, which use multiple gates and an internal memory cell to control the flow of information, GRUs use a single update gate to decide which information to retain and a reset gate to decide which information to discard.
 \begin{align*}
-    u_t &= \sigma(W_u [h_{t-1}, x_t]) \\
+        u_t &= \sigma(W_u [h_{t-1}, x_t]) \\
     r_t &= \sigma(W_r [h_{t-1}, x_t]) \\
     h_t &= (1 - u_t) \ast h_{t-1} + u_t \ast \tanh(W [r_t \ast h_{t-1}, u_t])
 \end{align*}
+
+
 Where: \\
 \indent \textbullet \(u_t\) is the update gate.\\
 \indent \textbullet \(r_t\) is the reset gate.\\
@@ -115,8 +134,17 @@ ARIMA is a commonly used statistical/economtric model for forecasting time serei
 the amount of differencing required to transform the series data
 into a stationary representation. The auto-regressive represents the relationship between the present value of a time and its previous values, capturing their correlation. 
 \begin{equation*}
-(1 - \sum_{k=1}^{p} \alpha_k L^k)(1 - L^d)X_t = (1 - \sum_{k=1}^{q} \beta_k L^k) \varepsilon_t
+(1 - \sum_{k=1}^{p} \alpha_k L^k)(1 + L^d)X_t = (1 - \sum_{k=1}^{q} \beta_k L^k) \varepsilon_t
 \end{equation*}
+Where:\\
+\indent \textbullet \(X_t\) is the time series.\\
+\indent \textbullet \(\alpha_k\) are the parameters of autoregressive parts. \\
+\indent \textbullet \(\beta_k\) are the parameters of the moving average part.\\
+\indent \textbullet \(\varepsilon_t\) is white noise error.\\
+\indent \textbullet \(p\) is the order of auto-regressive part.\\
+\indent \textbullet \(q\) is the order of the moving part.\\
+\indent \textbullet \(d\) is the degree of differencing.\\
+
 Let L be the lag operator, in the above equation and p,d,q are hyper-parameters over which we optimized.At each time t, we train a model using the price history to predict the price at time t and use the sign of the change in price as a prediction.
 \subsection{Linear Regression}
  Linear regression is a statistical model which estimates the linear relationship between a scalar response and one or more explanatory variables (also known as dependent and independent variables)
