@@ -9,7 +9,6 @@
 \usepackage{multirow}
 \usepackage{multicol}
 \usepackage{float}
-
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
@@ -42,8 +41,8 @@
 In the volatile world of cryptocurrency trading, predicting price movements has become increasingly vital for both investors and traders. This study aims to address the challenging task of forecasting cryptocurrency prices based on historical data. The primary problem we tackle is to use the past ten days of historical data to predict the price of a cryptocurrency for the subsequent day. To achieve this, we explore a variety of machine learning and statistical forecasting methods. These methods include Linear Regression, Long Short-Term Memory (LSTM), SARIMAX (Seasonal AutoRegressive Integrated Moving Average with eXogenous factors), Recurrent Neural Network (RNN), Gated Recurrent Unit (GRU), Stacking Model, Autoregressive Transformer (Automformer), and ARIMA (AutoRegressive Integrated Moving Average). Our dataset encompasses historical data of three major cryptocurrencies: Bitcoin, Ethereum, and Binance. It includes five key attributes: Date, Price, Open, High, Low, Volume, and Change(\%), covering a period from March 1, 2019, to March 1, 2024.
 
 \section{Related Works}
+In 2023, the authors \cite{seabe2023forecasting} from Sefako Makgatho Health Sciences University have conducted an experiment using three algorithms which are LSTM, Bi-LSTM, and GRU to predict three different cryptocurrencies which are BTC, ETH and Bi-LSTM. The results suggest that deep learning models are effective in predicting the cryptocurrency prices.
 
-In recent studies, various machine learning approaches have been employed to predict cryptocurrency prices. One study utilized supervised regression, specifically random forest regression and LSTM models, trained using Python libraries sklearn and keras, respectively, to forecast Bitcoin prices \cite{b1}. Another research employed three algorithmic models, namely LSTM, SVM, and Polynomial Regression, with mean square error as the key determinant \cite{b2}. Additionally, a paper focused on Ethereum (ETH) price prediction integrated Technical Analysis (TA) indicators, social media trends, and transaction network properties into two models: a Base Model and a Full Model. The Full Model, which incorporated network properties like degree centrality and betweenness centrality, demonstrated superior predictive performance compared to the Base Model, highlighting the significance of network properties in forecasting cryptocurrency prices \cite{b3}.
 
 \section{Materials}
 \subsection{Dataset}
@@ -61,11 +60,46 @@ Price & The closing price\\ \\
 \end{tabular}
 \end{table}
 \subsection{Descriptive Statistics}
+\subsubsection{Binance}
+\paragraph{Detail statical}
+\begin{center}
+\begin{tabular}{|l|r|}
+\hline
+\textbf{Price} & \textbf{Value} \\
+\hline
+Count & 1828 \\
+\hline
+Mean & 212.45 \\
+\hline
+Std & 171.77 \\
+\hline
+Min & 9.25 \\
+\hline
+25\% & 25.33 \\
+\hline
+50\% (Median) & 242.4 \\
+\hline
+75\% & 318.92 \\
+\hline
+Max & 676.56 \\
+\hline
+Mode & 23.01 \\
+\hline
+Variance & 29504.01 \\
+\hline
+Kurtosis & -0.84 \\
+\hline
+Skewness & 0.32 \\
+\hline
+\end{tabular}
+\end{center}
+\paragraph{Visualization}
+
 \begin{table}[H]
-\caption{Bitcoin, Ethereum, Solana Descriptive Statistics}
+\caption{Bitcoin, Ethereum, Binance Descriptive Statistics}
 \end{table}
 \section{Methodology}
-\subsection{Long Short Term Memory}\\
+\subsection{Long Short Term Memory}
 Long Short-Term Memory network is a recurrent neural network (RNN), aimed at dealing with the vanishing gradient problem present in traditional RNNs. Its relative insensitivity to gap length is its advantage over other RNNs, hidden Markov models and other sequence learning methods. It aims to provide a short-term memory for RNN that can last thousands of timesteps, thus "long short-term memory".
 
 \begin{align*}
@@ -80,24 +114,72 @@ o_t &= \sigma(W_o \cdot X + b_o) \\
 C_t &= f_t \odot C_{t-1} + i_t \odot \tilde{C}_t \\
 h_t &= o_t \odot \tanh(C_t)
 \end{align*}
+Where:\\
+\indent \textbullet\ \(x_t\) is the input at time step t.\\
+\indent \textbullet\ \(h_{t-1}\) is the hidden state at time step t.\\
+\indent \textbullet\ \(C_t\) is the cell state at time step t.\\
+\indent \textbullet\ \(i_t\) is the input gate.\\
+\indent \textbullet\ \(f_t\) is the forget gate.\\
+\indent \textbullet\ \(o_t\) is the output gate.\\
+\includegraphics[scale=0.4]{images/Screenshot-from-2021-03-16-15-51-05.png}
 \subsection{Seasonal AutoRegressive Integrated Moving Average with eXogenous
 factors (SARIMAX)}\\
-SARIMAX is a statistical model designed to capture and forecast the underlying patterns, trends, and seasonality in such data
+While ARIMA is famous, it has limitations in handling seasonal fluctuation and external factors, which are common in time series data. SARIMAX model is an abbreviation for Seasonal Autoregressive Integrated Moving Average or Seasonal ARIMA and belongs to the family of the ARIMA model. It is mentioned in that the SARIMAX model is capable of handling time series data that has a single variable along with seasonality. Apart from the hyperparameters for ARIMA, three different hyperparameters namely the AutoRegression (AR), Integrated (I), and Moving Average (MA) for the seasonal part of the series along with one parameter for the period of the seasonality. Just adding X (an exogenous variable) in the SARIMA model makes it SARIMAX. Sarimax is denoted as SARIMAX(p,d,q)(P,D,Q,S) where P,D,Q represents the element of AR, differencing, and MA components respectively, while S represents periodicity of the seasons.
+\begin{flalign*}
+& (1 - \sum_{i=1}^p \phi_i L^i)(1 - \sum_{i=1}^P \Phi_i L^{iS}) \times (1 - L)(1 - L^S)^D Y_t && \\
+& = (1 + \sum_{i=1}^q \theta_i L^i)(1 + \sum_{i=1}^Q \Theta_i L^{iS}) \varepsilon_t + \beta X_t &&
+\end{flalign*}
+Where: \\
+\indent \textbullet\ P: the order of auto-regressive.\\
+\indent \textbullet\ Q: the order of moving average.\\
+\indent \textbullet\ D: the degree of differencing.\\
+\indent \textbullet\ S: the periodicity of the seasons.\\
+\indent \textbullet\ \(\Theta\): the seasonal AR paramater.\\
+\indent \textbullet\ \(\Phi\): the seasonal MA parameter.\\
+
+
+
+
+
+
 \subsection{Recurrent Neural Network (RNN)}\\
 Recurrent Neural Network(RNN) is a type of Neural Network where the output from the previous step is fed as input to the current step.
 \subsection{Gated Recurrent Unit}
-The GRU is like a long short-term memory (LSTM) with a gating mechanism to input or forget certain features, but lacks a context vector or output gate, resulting in fewer parameters than LSTM.
+Gated Recurrent Units (GRUs) are a type of RNN that were introduced by in 2014 as an improvement over the traditional LSTM networks. Like LSTMs, GRUs are designed to be able to process input sequences of arbitrary length and maintain a state that encodes information about the past. However, unlike LSTMs, which use multiple gates and an internal memory cell to control the flow of information, GRUs use a single update gate to decide which information to retain and a reset gate to decide which information to discard.
+\begin{align*}
+        u_t &= \sigma(W_u [h_{t-1}, x_t]) \\
+    r_t &= \sigma(W_r [h_{t-1}, x_t]) \\
+    h_t &= (1 - u_t) \ast h_{t-1} + u_t \ast \tanh(W [r_t \ast h_{t-1}, u_t])
+\end{align*}
+
+
+Where: \\
+\indent \textbullet \(u_t\) is the update gate.\\
+\indent \textbullet \(r_t\) is the reset gate.\\
+\indent \textbullet \(h_t\) is the hidden state at time step t .\\
+\includegraphics[scale=1]{images/Structure-of-the-gated-recurrent-unit-GRU-recurrent-network.png}
 \subsection{Stacking Model}
 Stacking or stacked generalization is an ensemble machine learning algorithm. The main idea of stacking model is that we combine multiple weak models to enhance the accuracy of prediction. This algorithm consists of two parts: base model and meta model. Meta model use output from base model to produce the best result.\\ \\
-\includegraphics[scale=0.3]{Architecture of stacking model.png}
+\includegraphics[scale=0.3]{images/Architecture of stacking model.png}
 \subsection{AutoRegressive Transformer}
 
 \subsection{AutoRegressive Integrated
 Moving Average (ARIMA)} 
-ARIMA is a model used for time series analysis and forecasting. The model is used on time series data which will be transformed into a stationary time series; the predictions are a linear regression upon features including time differences and moving averages. The implementation used is from the Statsmodels package (Seabold and Perktold, 2010). In ARIMA, the data is difference that is, the price features are transformed to the difference between prices.
+ARIMA is a commonly used statistical/economtric model for forecasting time sereis data. The ARIMA model consists of three parts: auto-regressive (AR), integrated (I) and moving-average (MA).The integrated component represents
+the amount of differencing required to transform the series data
+into a stationary representation. The auto-regressive represents the relationship between the present value of a time and its previous values, capturing their correlation. 
 \begin{equation*}
-(1 - \sum_{k=1}^{p} \alpha_k L^k)(1 - L^d)X_t = (1 - \sum_{k=1}^{q} \beta_k L^k) \varepsilon_t
+(1 - \sum_{k=1}^{p} \alpha_k L^k)(1 + L^d)X_t = (1 - \sum_{k=1}^{q} \beta_k L^k) \varepsilon_t
 \end{equation*}
+Where:\\
+\indent \textbullet \(X_t\) is the time series.\\
+\indent \textbullet \(\alpha_k\) are the parameters of autoregressive parts. \\
+\indent \textbullet \(\beta_k\) are the parameters of the moving average part.\\
+\indent \textbullet \(\varepsilon_t\) is white noise error.\\
+\indent \textbullet \(p\) is the order of auto-regressive part.\\
+\indent \textbullet \(q\) is the order of the moving part.\\
+\indent \textbullet \(d\) is the degree of differencing.\\
+
 Let L be the lag operator, in the above equation and p,d,q are hyper-parameters over which we optimized.At each time t, we train a model using the price history to predict the price at time t and use the sign of the change in price as a prediction.
 \subsection{Linear Regression}
  Linear regression is a statistical model which estimates the linear relationship between a scalar response and one or more explanatory variables (also known as dependent and independent variables)
@@ -129,7 +211,7 @@ Where: \\
 	\indent\textbullet\ \(\hat{y_i}\) is the predicted value.
  \subsection{Bitcoin}
 \subsection{Ethereum}
-\subsection{Solana}
+\subsection{Binance}
 \section{Conclusion}
 \subsection{Summary}
 
@@ -137,22 +219,9 @@ Where: \\
 
 \section*{Acknowledgment}
 \addcontentsline{toc}{section}{Acknowledgment}
-
-%% UNCOMMENT these lines below (and remove the 2 commands above) if you want to embed the bibliografy.
-\begin{thebibliography}{00}
-\bibitem{b1} Giffary, Novan Fauzi Al,  "Prediction Of Cryptocurrency Prices Using LSTM, SVM And Polynomial Regression", 2024.
-\bibitem{b2} Chen, Wei, "Analysis of Bitcoin Price Prediction Using Machine Learning", 2023.
-\bibitem{b3} Grande, Mar, "The predictive power of the Blockhain transaction networks: Towards a new generation of network science market indicators", 2023.
-\bibitem{b4} Cayir, Aykut, Kozan, Ozan, Dag, Tuge, Yenidoğan, Işıl, Arslan, Çiğdem, "Bitcoin Forecasting Using ARIMA and PROPHET", 2018-09-20.
-\bibitem{b5} Chen, Zheshi, Li, Chunhong,"Bitcoin price prediction using machine learning: An approach to sample dimension engineering", 2020-02-01
-\bibitem{b6}Amirzadeh, Rasoul, Nazari, Asef, Thiruvady, Dhananjay, Ee, Mong Shan, "Causal Feature Engineering of Price Directions of Cryptocurrencies using Dynamic Bayesian Networks", 2023-06-13.
-\bibitem{b7} Livieris, Ioannis E., Pintelas, Emmanuel, Stavroyiannis, Stavros, Panagiotis "Ensemble Deep Learning Models for Forecasting Cryptocurrency Time-Series"
-\bibitem{b8} "Forecasting Stock Market Prices Using Machine Learning and Deep Learning Models: A Systematic Review, Performance Analysis and Discussion of Implications"
-\bibitem{b9} "Stock Closing Price Prediction using Machine Learning Techniques"
-\end{thebibliography}
-%%%%%%%%%%%%%%%
-
-
+\nocite{*}
+\bibliographystyle{IEEEannot}
+\bibliography{Ref}
 \EOD
 
 \end{document}
