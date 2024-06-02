@@ -60,11 +60,121 @@ Price & The closing price\\ \\
 \end{tabular}
 \end{table}
 \subsection{Descriptive Statistics}
-\begin{table}[H]
-\caption{Bitcoin, Ethereum, Solana Descriptive Statistics}
+\subsubsection{Binance}
+\subsubsubsection{Detail statics}
+\vspace{0.5cm}
+\begin{center}
+\begin{tabular}{|l|r|}
+\hline
+\textbf{Price} & \textbf{Value} \\
+\hline
+Count & 1828 \\
+\hline
+Mean & 212.45 \\
+\hline
+Std & 171.77 \\
+\hline
+Min & 9.25 \\
+\hline
+25\% & 25.33 \\
+\hline
+50\% (Median) & 242.4 \\
+\hline
+75\% & 318.92 \\
+\hline
+Max & 676.56 \\
+\hline
+Mode & 23.01 \\
+\hline
+Variance & 29504.01 \\
+\hline
+Kurtosis & -0.84 \\
+\hline
+Skewness & 0.32 \\
+\hline
+\end{tabular}
+\end{center}
+\paragraph{Visualization}
+\includegraphics[scale=0.35]{images/Binance historical plot.png}\\
+\includegraphics[scale=0.35]{images/Binance price boxplot.png}
+\subsubsection{Bitcoin}
+\paragraph{Detail statics}
+\begin{center}
+\begin{table}[h!]
+\centering
+\begin{tabular}{|l|r|}
+\hline
+\textbf{Price} & \textbf{Value} \\
+\hline
+Count & 1909 \\
+\hline
+Mean & 27700.52 \\
+\hline
+Std & 17708.57 \\
+\hline
+Min & 3761.55 \\
+\hline
+25\% & 10410.12 \\
+\hline
+50\% (Median) & 25868.79 \\
+\hline
+75\% & 41143.92 \\
+\hline
+Max & 73083.50 \\
+\hline
+Mode & 3761.55 \\
+\hline
+Variance & 313593633.63 \\
+\hline
+Kurtosis & -0.69 \\
+\hline
+Skewness & 0.57 \\
+\hline
+\end{tabular}
+\caption{Summary Statistics of Price}
+\label{table:summary_statistics}
 \end{table}
+\end{center}
+\paragraph{Visualization}
+\includegraphics[scale=0.5]{images/Bitcoin_line.png}\\
+\includegraphics[scale=0.5]{images/Bitcoin_boxplot.png}
+\subsubsection{Ethereum}
+\paragraph{Detail statics}
+\begin{center}
+\begin{tabular}{|l|r|}
+\hline
+\textbf{Value} & \textbf{Price} \\
+\hline
+Count &  \\
+\hline
+Mean & \\
+\hline
+Std &\\
+\hline
+Min &  \\
+\hline
+25\% &  \\
+\hline
+50\% (Median) &  \\
+\hline
+75\% & \\
+\hline
+Max & \\
+\hline
+Mode & \\
+\hline
+Variance &  \\
+\hline
+Kurtosis &  \\
+\hline
+Skewness &  \\
+\hline
+\end{tabular}
+
+\end{center}
+\paragraph{Visualization}
 \section{Methodology}
-\subsection{Long Short Term Memory}\\
+\subsection{Long Short Term Memory}
 Long Short-Term Memory network is a recurrent neural network (RNN), aimed at dealing with the vanishing gradient problem present in traditional RNNs. Its relative insensitivity to gap length is its advantage over other RNNs, hidden Markov models and other sequence learning methods. It aims to provide a short-term memory for RNN that can last thousands of timesteps, thus "long short-term memory".
 
 \begin{align*}
@@ -137,13 +247,13 @@ into a stationary representation. The auto-regressive represents the relationshi
 (1 - \sum_{k=1}^{p} \alpha_k L^k)(1 + L^d)X_t = (1 - \sum_{k=1}^{q} \beta_k L^k) \varepsilon_t
 \end{equation*}
 Where:\\
-\indent \textbullet \(X_t\) is the time series.\\
-\indent \textbullet \(\alpha_k\) are the parameters of autoregressive parts. \\
-\indent \textbullet \(\beta_k\) are the parameters of the moving average part.\\
-\indent \textbullet \(\varepsilon_t\) is white noise error.\\
-\indent \textbullet \(p\) is the order of auto-regressive part.\\
-\indent \textbullet \(q\) is the order of the moving part.\\
-\indent \textbullet \(d\) is the degree of differencing.\\
+\indent \textbullet\ \(X_t\) is the time series.\\
+\indent \textbullet\ \(\alpha_k\) are the parameters of autoregressive parts. \\
+\indent \textbullet\ \(\beta_k\) are the parameters of the moving average part.\\
+\indent \textbullet\ \(\varepsilon_t\) is white noise error.\\
+\indent \textbullet\ \(p\) is the order of auto-regressive part.\\
+\indent \textbullet\ \(q\) is the order of the moving part.\\
+\indent \textbullet\ \(d\) is the degree of differencing.\\
 
 Let L be the lag operator, in the above equation and p,d,q are hyper-parameters over which we optimized.At each time t, we train a model using the price history to predict the price at time t and use the sign of the change in price as a prediction.
 \subsection{Linear Regression}
