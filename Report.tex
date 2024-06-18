@@ -297,7 +297,6 @@ networks depends on the prior elements within the sequence.
   \caption{Recurrent Neural Network architecture}
   \label{fig:rnn_image}
 \end{figure}
-
 \subsection{Gated Recurrent Unit}
 Gated Recurrent Units (GRUs) are a type of RNN that were introduced by in 2014 as an improvement over the traditional LSTM networks. Like LSTMs, GRUs are designed to be able to process input sequences of arbitrary length and maintain a state that encodes information about the past. However, unlike LSTMs, which use multiple gates and an internal memory cell to control the flow of information, GRUs use a single update gate to decide which information to retain and a reset gate to decide which information to discard.
 \begin{align*}
@@ -311,6 +310,7 @@ Where: \\
 \indent \textbullet \(u_t\) is the update gate.\\
 \indent \textbullet \(r_t\) is the reset gate.\\
 \indent \textbullet \(h_t\) is the hidden state at time step t .\\
+
 \begin{figure}[h!]
   \centering
   \includegraphics[scale=1]{images/Structure-of-the-gated-recurrent-unit-GRU-recurrent-network.png}
@@ -374,7 +374,6 @@ Our models consist of two levels: Level one consists of five LSTM and five GRU. 
     \label{fig:autoformer}
 \end{figure}
 
-
 \subsection{AutoRegressive Integrated
 Moving Average (ARIMA)} 
 ARIMA is a commonly used statistical/economtric model for forecasting time sereis data. The ARIMA model consists of three parts: auto-regressive (AR), integrated (I) and moving-average (MA).The integrated component represents
@@ -384,6 +383,7 @@ into a stationary representation. The auto-regressive represents the relationshi
 (1 - \sum_{k=1}^{p} \alpha_k L^k)(1 + L^d)X_t = (1 - \sum_{k=1}^{q} \beta_k L^k) \varepsilon_t
 \end{equation*}
 Where:\\
+
 \indent \textbullet\ \(X_t\) is the time series.\\
 \indent \textbullet\ \(\alpha_k\) are the parameters of autoregressive parts. \\
 \indent \textbullet\ \(\beta_k\) are the parameters of the moving average part.\\
@@ -797,6 +797,7 @@ Moving Average With Exogenous Factors
 \end{figure}
 
 \subsection{Ethereum}
+
 \subsubsection{Long Short Term Memory}
 \begin{figure}[H]
   \centering
@@ -912,7 +913,6 @@ Moving Average With Exogenous Factors
   \caption{Stacking Model for Ethereum with ratio 8:2}
   \label{fig:stackmodel_eth_82}
 \end{figure}
-
 
 \subsubsection{Autoregressive Transformer}
 
@@ -1217,6 +1217,7 @@ The result indicates that deep learning models, namely LSTM and GRU, are more ac
 
 %\section*{Acknowledgment}
 %\addcontentsline{toc}{section}{Acknowledgment}
+
 \nocite{*}
 \bibliographystyle{IEEEannot}
 \bibliography{Ref}
