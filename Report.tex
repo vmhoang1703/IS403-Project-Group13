@@ -1,4 +1,5 @@
 \documentclass{ieeeojies}
+\usepackage{svg}
 \usepackage{cite}
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{algorithmic}
@@ -6,14 +7,21 @@
 \usepackage{textcomp}
 \usepackage{array}
 \usepackage[table]{xcolor}
+\usepackage{colortbl}
 \usepackage{multirow}
 \usepackage{multicol}
 \usepackage{float}
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+\definecolor{lightgray}{gray}{0.9}
+\definecolor{lightgreen}{rgb}{0.75, 1, 0.75}
+\definecolor{lightpink}{rgb}{1, 0.75, 0.8}
+\definecolor{lightyellow}{rgb}{1, 1, 0.75}
+
+
 
 \begin{document}
-\title{CRYPTOCURRENCY PREDICTION USING MACHINE LEARNING}
+\title{FORECASTING CRYPTOCURRENCY PRICES USING MACHINE LEARNING AND DEEP LEARNING MODELS}
 
 \author{\uppercase{VU MINH HOANG}\authorrefmark{1},
 \uppercase{DUONG HUY HOANG\authorrefmark{2}, and TRAN THI MINH CHAU}\authorrefmark{3}}
@@ -27,10 +35,14 @@
 {Author \headeretal: VU MINH HOANG, DUONG HUY HOANG, TRAN THI MINH CHAU}
 
 \begin{abstract}
+Digital coin over the last few years have become an important trading assets without any imediator entity. Due to its unstable property, this research aims to use Linear regression, GRU, RNN, LSTM, ARIMA, Stacking models, AutoFormer and Sarimax forecast the price of three different cryptocurrencies price.  
 \end{abstract}
-
-\begin{keywords}
+\begin{keywords}\\
+    machine learning, deep learning, Bitcoin, Ethereum, Binance, cryptocurrency.
 \end{keywords}
+
+
+
 
 \titlepgskip=-15pt
 
@@ -38,33 +50,195 @@
 
 \section{Introduction}
 \label{sec:introduction}
-In the volatile world of cryptocurrency trading, predicting price movements has become increasingly vital for both investors and traders. This study aims to address the challenging task of forecasting cryptocurrency prices based on historical data. The primary problem we tackle is to use the past ten days of historical data to predict the price of a cryptocurrency for the subsequent day. To achieve this, we explore a variety of machine learning and statistical forecasting methods. These methods include Linear Regression, Long Short-Term Memory (LSTM), SARIMAX (Seasonal AutoRegressive Integrated Moving Average with eXogenous factors), Recurrent Neural Network (RNN), Gated Recurrent Unit (GRU), Stacking Model, Autoregressive Transformer (Automformer), and ARIMA (AutoRegressive Integrated Moving Average). Our dataset encompasses historical data of three major cryptocurrencies: Bitcoin, Ethereum, and Binance. It includes five key attributes: Date, Price, Open, High, Low, Volume, and Change(\%), covering a period from March 1, 2019, to March 1, 2024.
+In the volatile world of cryptocurrency trading, predicting price movements has become increasingly vital for both investors and traders. This study aims to address the challenging task of forecasting cryptocurrency prices based on historical data. To achieve this, we explore a variety of machine learning and statistical forecasting methods. These methods include Linear Regression, Long Short-Term Memory (LSTM), SARIMAX (Seasonal AutoRegressive Integrated Moving Average with eXogenous factors), Recurrent Neural Network (RNN), Gated Recurrent Unit (GRU), Stacking Model, Autoregressive Transformer (Automformer), and ARIMA (AutoRegressive Integrated Moving Average). Our dataset encompasses historical data of three major cryptocurrencies: Bitcoin, Ethereum, and Binance. It consists of seven attributes: Date, Price, Open, High, Low, Volume, and Change(\%), covering a period from March 1, 2019 to June 1, 2024.
 
 \section{Related Works}
-In 2023, the authors \cite{seabe2023forecasting} from Sefako Makgatho Health Sciences University have conducted an experiment using three algorithms which are LSTM, Bi-LSTM, and GRU to predict three different cryptocurrencies which are BTC, ETH and Bi-LSTM. The results suggest that deep learning models are effective in predicting the cryptocurrency prices.
-
-
-\section{Materials}
+In 2023, the authors \cite{seabe2023forecasting} from Sefako Makgatho Health Sciences University have conducted an experiment using three algorithms which are LSTM, Bi-LSTM, and GRU to predict three different cryptocurrencies which are BTC, ETH and Bi-LSTM. The results suggtest that deep learning models are effective in predicting the cryptocurrency prices. However, in a paper from 2022 of the authors \cite{ye2022stacking} from Shenzhen Institute of Advanced Technology, they have used Stacking Ensemble Deep Learning Model consisting of LSTM and GRU. Throughout the experiment, the stacking ensemble models outperform other models in most cases. While Novan Fauzi Al Giffary and Feri Sulianta \cite{fauzi2024prediction} from Widyatama University, Indonesia have used three models LSTM, SVM and Polynomial Regression to predcit Bitcoin prices. By applying these three models, SVM achieve the smallest mean square error with 0.02. In order to exploit useful information from cryptocurrency in isolation, methods proposed by  authors \cite{livieris2021advanced} proven to reduce overfitting and computational cost. 
+\section{Materials and Process}
 \subsection{Dataset}
+The dataset of this experiment includes historical data of three different crytocurrencies collected from yahoo finance and investing. Our dataset time range is in 5-year period starting at 1/3/2019 and ending at 1/6/2024. With each historical dataset there are 7 columns which are Date, Price, Open, High, Low, Vol., Change\%. The table below gives further explanation of each column.
 \begin{table}[H]
 \centering
-\begin{tabular}{l l}
- \textbf{Feature} & \textbf{Definition} \\ \\
- Date & Date \\ \\
- Open & Opening prices\\ \\
- High & Highest prices during the day \\ \\
- Low & Lowest prices during the day\\ \\
- Volume & Trading volume in the day\\ \\
-Price & The closing price\\ \\
- Change(\%) & Percentage change in Bitcoin's price from the previous day\\
+\begin{tabular}{|>{\columncolor{lightgray}}p{3cm}|p{4cm}|}
+\hline
+\textbf{Attribute} & \textbf{Explanation} \\ \hline
+Date & The specific day on which the data point was recorded. \\ \hline
+Price & The closing price of the cryptocurrency on the given date. \\ \hline
+Open & The price at which the cryptocurrency started trading on the given date. \\ \hline
+High & The highest price reached by the cryptocurrency during the trading day. \\ \hline
+Low & The lowest price reached by the cryptocurrency during the trading day. \\ \hline
+Vol. & The total volume of the cryptocurrency traded on the given date. \\ \hline
+Change\% & The percentage change in the price of the cryptocurrency from the previous day's closing price. \\ \hline
 \end{tabular}
+\caption{Explanation of Cryptocurrency Data Attributes}
+\label{table:crypto_attributes}
 \end{table}
+\subsection{Preprocess}
+To better evaluate the performance of each model and avoid overfitting, the train to split ratio is 60\% and 40\%, 70\% and 30\%, 80\% and 20\%. The they are scaled seperately and splitted into X and y dataset.\\
+\\
+\begin{figure}[h]
+    \centering
+\includegraphics[scale=0.016]{images/Split process.png}
+\caption{Data preprocess steps}
+\label{fig:split_process}
+\end{figure}
 \subsection{Descriptive Statistics}
+\subsubsection{Binance}
+\paragraph{Detail statics}
 \begin{table}[H]
-\caption{Bitcoin, Ethereum, Solana Descriptive Statistics}
+\centering
+\begin{tabular}{|l|r|}
+\hline
+\textbf{Price} & \textbf{Value} \\
+\hline
+Count & 1920 \\
+\hline
+Mean & 229.55 \\
+\hline
+Std & 184.43 \\
+\hline
+Min & 9.25 \\
+\hline
+25\% & 27.03 \\
+\hline
+50\% (Median) & 247.55 \\
+\hline
+75\% & 332.11 \\
+\hline
+Max & 676.56 \\
+\hline
+Mode & 23.01 \\
+\hline
+Variance & 34014.46 \\
+\hline
+Kurtosis & -0.89 \\
+\hline
+Skewness & 0.33 \\
+\hline
+\end{tabular}
+\caption{Descriptive statistics for Binance price data}
+\label{table:binance_statistics}
 \end{table}
+
+\paragraph{Visualization}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=0.35]{images/Binance historical plot.png}
+    \caption{Historical plot of Binance prices}
+    \label{fig:binance_historical}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=0.35]{images/Binance price boxplot.png}
+    \caption{Boxplot of Binance prices}
+    \label{fig:binance_boxplot}
+\end{figure}
+\subsubsection{Bitcoin}
+\paragraph{Detail statics}
+\begin{table}[h!]
+\centering
+\begin{tabular}{|l|r|}
+\hline
+\textbf{Price} & \textbf{Value} \\
+\hline
+Count & 1920 \\
+\hline
+Mean & 229.55 \\
+\hline
+Std & 184.43 \\
+\hline
+Min & 9.25 \\
+\hline
+25\% & 27.03 \\
+\hline
+50\% (Median) & 247.55 \\
+\hline
+75\% & 332.11 \\
+\hline
+Max & 676.56 \\
+\hline
+Mode & 23.01 \\
+\hline
+Variance & 34014.46 \\
+\hline
+Kurtosis & -0.89 \\
+\hline
+Skewness & 0.33 \\
+\hline
+\end{tabular}
+\caption{Descriptive statistics for Bitcoin price data}
+\label{table:bitcoin_statistics}
+\end{table}
+
+\paragraph{Visualization}
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.3]{images/Bitcoin_Price.png}
+    \caption{Bitcoin price plot}
+    \label{fig:bitcoin_price}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.53]{images/Bitcoin_boxplot.png}
+    \caption{Boxplot of Bitcoin prices}
+    \label{fig:bitcoin_boxplot}
+\end{figure}
+\subsubsection{Ethereum}
+\paragraph{Detail statics}
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|r|}
+\hline
+\textbf{Value} & \textbf{Price} \\
+\hline
+Count & 1920 \\
+\hline
+Mean & 1580.44 \\
+\hline
+Std & 1205.86 \\
+\hline
+Min & 107.9 \\
+\hline
+25\% & 268.95 \\
+\hline
+50\% (Median) & 1622.47 \\
+\hline
+75\% & 2334.24 \\
+\hline
+Max & 4808.38 \\
+\hline
+Mode & 125.24 \\
+\hline
+Variance & 1454102.49 \\
+\hline
+Kurtosis & -0.73 \\
+\hline
+Skewness & 0.46 \\
+\hline
+\end{tabular}
+\caption{Descriptive statistics for Ethereum price data}
+\label{table:ethereum_statistics}
+\end{table}
+
+\paragraph{Visualization}
+\begin{figure}[H] % h! means "here" if possible, otherwise "top of page"
+    \centering
+    \includegraphics[scale=0.5]{images/ETH_boxplt.png}
+    \caption{Boxplot of ETH prices}
+    \label{fig:eth_boxplot}
+\end{figure}
+
+\begin{figure}[H] % h! means "here" if possible, otherwise "top of page"
+    \centering
+    \includegraphics[scale=0.5]{images/ETH_Line.png}
+    \caption{Line plot of ETH prices}
+    \label{fig:eth_lineplot}
+\end{figure}
+
 \section{Methodology}
-\subsection{Long Short Term Memory}\\
+\subsection{Long Short Term Memory}
 Long Short-Term Memory network is a recurrent neural network (RNN), aimed at dealing with the vanishing gradient problem present in traditional RNNs. Its relative insensitivity to gap length is its advantage over other RNNs, hidden Markov models and other sequence learning methods. It aims to provide a short-term memory for RNN that can last thousands of timesteps, thus "long short-term memory".
 
 \begin{align*}
@@ -86,9 +260,14 @@ Where:\\
 \indent \textbullet\ \(i_t\) is the input gate.\\
 \indent \textbullet\ \(f_t\) is the forget gate.\\
 \indent \textbullet\ \(o_t\) is the output gate.\\
-\includegraphics[scale=0.4]{images/Screenshot-from-2021-03-16-15-51-05.png}
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.4]{images/Screenshot-from-2021-03-16-15-51-05.png}
+    \caption{Architecture of Long Short-Term Memory (LSTM)}
+    \label{fig:lstm_architecture}
+\end{figure}
 \subsection{Seasonal AutoRegressive Integrated Moving Average with eXogenous
-factors (SARIMAX)}\\
+factors (SARIMAX)}
 While ARIMA is famous, it has limitations in handling seasonal fluctuation and external factors, which are common in time series data. SARIMAX model is an abbreviation for Seasonal Autoregressive Integrated Moving Average or Seasonal ARIMA and belongs to the family of the ARIMA model. It is mentioned in that the SARIMAX model is capable of handling time series data that has a single variable along with seasonality. Apart from the hyperparameters for ARIMA, three different hyperparameters namely the AutoRegression (AR), Integrated (I), and Moving Average (MA) for the seasonal part of the series along with one parameter for the period of the seasonality. Just adding X (an exogenous variable) in the SARIMA model makes it SARIMAX. Sarimax is denoted as SARIMAX(p,d,q)(P,D,Q,S) where P,D,Q represents the element of AR, differencing, and MA components respectively, while S represents periodicity of the seasons.
 \begin{flalign*}
 & (1 - \sum_{i=1}^p \phi_i L^i)(1 - \sum_{i=1}^P \Phi_i L^{iS}) \times (1 - L)(1 - L^S)^D Y_t && \\
@@ -101,14 +280,23 @@ Where: \\
 \indent \textbullet\ S: the periodicity of the seasons.\\
 \indent \textbullet\ \(\Theta\): the seasonal AR paramater.\\
 \indent \textbullet\ \(\Phi\): the seasonal MA parameter.\\
+\subsubsection{Recurrent Neural Network (RNN)}
+A recurrent neural network (RNN) is a type of artificial
+neural network that uses sequential data or time series data.
+RNN is applied successfully to many problems, especially in the
+field of NLP (Natural Language Processing). RNN is
+distinguished by their "memory," as they use information from
+prior inputs to influence the current input and output. While
+traditional deep neural networks assume that inputs and outputs
+are independent of each other, the output of recurrent neural
+networks depends on the prior elements within the sequence.
 
-
-
-
-
-
-\subsection{Recurrent Neural Network (RNN)}\\
-Recurrent Neural Network(RNN) is a type of Neural Network where the output from the previous step is fed as input to the current step.
+\begin{figure}[h!]
+  \centering
+  \includegraphics[scale=0.4]{images/Recurrent_Neural_Network_508b372642.png}
+  \caption{Recurrent Neural Network architecture}
+  \label{fig:rnn_image}
+\end{figure}
 \subsection{Gated Recurrent Unit}
 Gated Recurrent Units (GRUs) are a type of RNN that were introduced by in 2014 as an improvement over the traditional LSTM networks. Like LSTMs, GRUs are designed to be able to process input sequences of arbitrary length and maintain a state that encodes information about the past. However, unlike LSTMs, which use multiple gates and an internal memory cell to control the flow of information, GRUs use a single update gate to decide which information to retain and a reset gate to decide which information to discard.
 \begin{align*}
@@ -122,11 +310,69 @@ Where: \\
 \indent \textbullet \(u_t\) is the update gate.\\
 \indent \textbullet \(r_t\) is the reset gate.\\
 \indent \textbullet \(h_t\) is the hidden state at time step t .\\
-\includegraphics[scale=1]{images/Structure-of-the-gated-recurrent-unit-GRU-recurrent-network.png}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[scale=1]{images/Structure-of-the-gated-recurrent-unit-GRU-recurrent-network.png}
+  \caption{Structure of the Gated Recurrent Unit (GRU) recurrent network}
+  \label{fig:gru_structure}
+\end{figure}
 \subsection{Stacking Model}
 Stacking or stacked generalization is an ensemble machine learning algorithm. The main idea of stacking model is that we combine multiple weak models to enhance the accuracy of prediction. This algorithm consists of two parts: base model and meta model. Meta model use output from base model to produce the best result.\\ \\
-\includegraphics[scale=0.3]{images/Architecture of stacking model.png}
-\subsection{AutoRegressive Transformer}
+Our models consist of two levels: Level one consists of five LSTM and five GRU. We pick these two models due to their good performance in prediction as the sub model. Level two is single layer model which is called meta model. We set the number of sub-models of the first layer to five to achieve the balance between computation and accuracy. The steps of the models are as follow:
+\begin{figure}[h!]
+  \centering
+  \includesvg[scale=0.08]{images/Stacking architecture.svg}
+  \caption{Stacking models architecture}
+  \label{fig:stacking_architecture}
+\end{figure}
+
+\\ \\
+
+\indent \textbullet\ Divide the dataset into training and testing set as in the image above. \\
+\indent\textbullet\ Sub-model LSTM training and testing: Divide the training set into 5 subsets named fromt train1 to train5. Then we define 5 instances of LSTM with same naming convetion from LSTM1 to LSTM5. For each LSTM instane, the process would be as follows:\\
+\indent $\diamond$ Take LSTM1 as an example, LSTM1 will learn train1 to train4 and make prediction on train5 then the result is called prediction1. The trained LSTM1 then make prediction on Test set as shown in the picture, the result is Test1. Then LSTM2 repeat the same process, it will learn from train1 to train3 and train5 and make prediction on train4 which is called prediction2 then make prediction on Test set, the result is Test2. The same process is applied to other instances.\\
+\parindent \textbullet\ Sub-model LSTM result: After the above process, we get Prediction1 to Prediction5 and Test1 to Test5. We then stack the Prediction1 to Prediction5 vertically. We will have training set of LSTM. The testing would be the average of Test1 to Test5.\\
+\indent \textbullet\ Them same process is applied to GRU.\\
+\indent \textbullet\ We then feed the training set and testing set to meta-model which is linear regression
+\subsection{AutoFormer}
+\textbf{AutoFormer} is a novel model proposed for long-term time series forecasting. It addresses the challenges associated with existing Transformer-based models by introducing two key innovations: the decomposition architecture and the Auto-Correlation mechanism.
+
+\subsection*{Key Innovations}
+
+\begin{enumerate}
+    \item \textbf{Decomposition Architecture}:
+    \begin{itemize}
+        \item \textbf{Progressive Decomposition}: Unlike traditional pre-processing methods, AutoFormer incorporates series decomposition as a fundamental component of the model architecture. This enables the model to progressively break down and understand complex time series data.
+        \item \textbf{Inner Block Design}: The decomposition process occurs within the model's layers, allowing for the extraction and refinement of trend and seasonal components throughout the learning process.
+    \end{itemize}
+    
+    \item \textbf{Auto-Correlation Mechanism}:
+    \begin{itemize}
+        \item \textbf{Period-Based Dependencies}: Inspired by stochastic process theory, this mechanism leverages the periodic nature of time series data to discover dependencies more effectively than traditional self-attention mechanisms.
+        \item \textbf{Efficiency}: The Auto-Correlation mechanism uses series-wise connections, which improve both the accuracy and efficiency of the model by reducing the computational complexity to $O(L \log L)$.
+    \end{itemize}
+\end{enumerate}
+
+\subsubsection*{Benefits}
+
+\begin{itemize}
+    \item \textbf{State-of-the-Art Accuracy}: AutoFormer achieves superior performance in long-term forecasting across various benchmarks, including applications in energy, traffic, economics, weather, and disease prediction, showing a 38\% relative improvement in accuracy.
+    \item \textbf{Computational Efficiency}: By replacing self-attention with the Auto-Correlation mechanism, AutoFormer overcomes the quadratic complexity issue, making it suitable for long-term forecasting tasks.
+\end{itemize}
+
+\subsubsection*{Model Architecture}
+
+\begin{itemize}
+    \item \textbf{Encoder-Decoder Structure}: Similar to traditional Transformers but enhanced with the decomposition and Auto-Correlation mechanisms.
+    \item \textbf{Series Decomposition}: Embedded within the layers to separate and refine seasonal and trend components progressively.
+\end{itemize}
+\begin{figure}[H] % h! means "here" if possible, otherwise "top of page"
+    \centering
+    \includegraphics[scale=0.35]{images/Autoformer.png}
+    \caption{Autoformer architecture}
+    \label{fig:autoformer}
+\end{figure}
 
 \subsection{AutoRegressive Integrated
 Moving Average (ARIMA)} 
@@ -137,13 +383,14 @@ into a stationary representation. The auto-regressive represents the relationshi
 (1 - \sum_{k=1}^{p} \alpha_k L^k)(1 + L^d)X_t = (1 - \sum_{k=1}^{q} \beta_k L^k) \varepsilon_t
 \end{equation*}
 Where:\\
-\indent \textbullet \(X_t\) is the time series.\\
-\indent \textbullet \(\alpha_k\) are the parameters of autoregressive parts. \\
-\indent \textbullet \(\beta_k\) are the parameters of the moving average part.\\
-\indent \textbullet \(\varepsilon_t\) is white noise error.\\
-\indent \textbullet \(p\) is the order of auto-regressive part.\\
-\indent \textbullet \(q\) is the order of the moving part.\\
-\indent \textbullet \(d\) is the degree of differencing.\\
+
+\indent \textbullet\ \(X_t\) is the time series.\\
+\indent \textbullet\ \(\alpha_k\) are the parameters of autoregressive parts. \\
+\indent \textbullet\ \(\beta_k\) are the parameters of the moving average part.\\
+\indent \textbullet\ \(\varepsilon_t\) is white noise error.\\
+\indent \textbullet\ \(p\) is the order of auto-regressive part.\\
+\indent \textbullet\ \(q\) is the order of the moving part.\\
+\indent \textbullet\ \(d\) is the degree of differencing.\\
 
 Let L be the lag operator, in the above equation and p,d,q are hyper-parameters over which we optimized.At each time t, we train a model using the price history to predict the price at time t and use the sign of the change in price as a prediction.
 \subsection{Linear Regression}
@@ -155,13 +402,15 @@ Where:\\
 	\indent\textbullet\ \(\beta_0\) is the intercept term.\\
 	\indent\textbullet\ \(\beta_1,..., \beta_k\) are the regression coefficients for the independent variables.\\
 	\indent\textbullet\ \(\varepsilon\) is the error term.
- \subsection{Preprocessing}
- \textbullet\ data transform \\
- \textbullet\ data scaling
- \subsection{Look-Back window}
-\section{Result}
 
-\subsection{Evaluation Methods}
+\begin{figure}[H] % h! means "here" if possible, otherwise "top of page"
+    \centering
+    \includegraphics[scale=0.5]{images/Screen-Shot-2017-06-04-at-1.46.51-PM.png}
+    \caption{Linear regression}
+    \label{fig:linear_regression}
+\end{figure}
+
+\section{Evaluation Methods}
 \textbf{Mean absolute error} (MAE): 
 The Mean Absolute Error is the average of all absolute errors. The formula is:\\
 \[MAE = \frac{1}{n} \sum_{i=1}^{n} | y_i - \hat{y}_i |\]\\
@@ -174,16 +423,801 @@ Where: \\
 	\indent\textbullet\ \(n\) is the number of observations in the dataset.\\
 	\indent\textbullet\ \(y_i\)  is the true value.\\
 	\indent\textbullet\ \(\hat{y_i}\) is the predicted value.
- \subsection{Bitcoin}
-\subsection{Ethereum}
+\section{Experiment and result}
 \subsection{Binance}
+\subsubsection{Long Short Term Memory}
+\begin{figure}[H]
+  \centering
+    \includegraphics[scale=0.3]{images/Binance result/64/LSTM_BNB_64.png}\\
+  \caption{LSTM model results for Binace with ratio 6:4}
+  \label{fig:lstm_bn_64}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+    \includegraphics[scale=0.3]{images/Binance result/73/LSTM_BNB_73.png}\\
+  \caption{LSTM model results for Binace with ratio 7:3}
+  \label{fig:lstm_bn_73}
+\end{figure}
+    
+\begin{figure}[H]
+  \centering
+    \includegraphics[scale=0.3]{images/Binance result/82/LSTM_BNB_82.png}
+  \caption{LSTM model results for Binace with ratio 8:2}
+  \label{fig:lstm_bn_82}
+\end{figure}
+    
+
+\subsubsection{Seasonal Autoregressive Integrated
+Moving Average With Exogenous Factors
+(SARIMAX)}
+\begin{figure}[H]
+  \centering
+\includegraphics[scale=0.3]{images/Binance result/64/SARIMAX64.png}
+  \caption{SARIMAX model results for Binance with ratio 6:4}
+  \label{fig:sarimax_bn_64}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+\includegraphics[scale=0.3]{images/Binance result/73/SARIMAX73.png}
+  \caption{SARIMAX model results for Binance with ratio 7:3}
+  \label{fig:sarimax_bn_73}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+\includegraphics[scale=0.3]{images/Binance result/82/SARIMAX.png}
+  \caption{SARIMAX model results for Binance with ratio 8:2}
+  \label{fig:sarimax_bn_82}
+\end{figure}
+
+\subsubsection{Gated recurrent unit}
+\begin{figure}[H]
+  \centering
+\includegraphics[scale=0.3]{images/Binance result/64/GRU_BNB_64.png}\\
+  \caption{Gated recurrent unit model results for Binance with ratio 6:4}
+  \label{fig:gru_bn_64}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+\includegraphics[scale=0.3]{images/Binance result/73/GRU_BNB_73.png}\\
+  \caption{Gated recurrent unit model results for Binance with ratio 7:3}
+  \label{fig:gru_bn_73}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+\includegraphics[scale=0.3]{images/Binance result/82/GRU_BNB_82.png}
+  \caption{Gated recurrent unit model results for Binance with ratio 8:2}
+  \label{fig:gru_bn_82}
+\end{figure}
+
+
+\subsubsection{Recurrent Neural Network (RNN)}
+\begin{figure}[H]
+  \centering
+\includegraphics[scale=0.3]{images/Binance result/64/RNN_BNB_64.png}\\
+  \caption{Recurrent Neural Network model results for Binance with ratio 6:4}
+  \label{fig:rnn_bn_64}
+\end{figure}
+
+
+\begin{figure}[H]
+  \centering
+\includegraphics[scale=0.3]{images/Binance result/73/RNN_BNB_73.png}\\
+  \caption{Recurrent Neural Network model results for Binance with ratio 7:3}
+  \label{fig:rnn_bn_73}
+\end{figure}
+
+
+\begin{figure}[H]
+  \centering
+\includegraphics[scale=0.3]{images/Binance result/82/RNN_BNB_82.png}
+  \caption{Recurrent Neural Network model results for Binance with ratio 8:2}
+  \label{fig:rnn_bn_82}
+\end{figure}
+
+
+\subsubsection{Stacking Model}
+\begin{figure}[H]
+  \centering
+\includegraphics[scale=0.3]{images/Binance result/64/SM_BNB_64.png}\\
+  \caption{Stacking Model results for Binance with ratio 6:4}
+  \label{fig:stackmodel_bn_64}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+\includegraphics[scale=0.3]{images/Binance result/73/SM_BNB_73.png}\\
+  \caption{Stacking Model results for Binance with ratio 7:3}
+  \label{fig:stackmodel_bn_73}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+\includegraphics[scale=0.3]{images/Binance result/82/SM_BNB_82.png}
+  \caption{Stacking Model results for Binance with ratio 8:2}
+  \label{fig:stackmodel_bn_82}
+\end{figure}
+
+
+\subsubsection{Autoregressive Transformer}
+
+\begin{figure}[H]
+  \centering
+\includegraphics[scale=0.3]{images/Binance result/64/Autoformer_BNB_64.png}
+  \caption{Autoregressive Transformer results for Binance with ratio 6:4}
+  \label{fig:autoformer_bn_64}
+\end{figure}
+\begin{figure}[H]
+  \centering
+\includegraphics[scale=0.3]{images/Binance result/73/Autoformer_BNB_73.png}
+  \caption{Autoregressive Transformer results for Binance with ratio 7:3}
+  \label{fig:autoformer_bn_73}
+\end{figure}
+\begin{figure}[H]
+  \centering
+\includegraphics[scale=0.3]{images/Binance result/82/Autoformer_BNB_82.png}
+  \caption{Autoregressive Transformer results for Binance with ratio 8:2}
+  \label{fig:autoformer_bn_82}
+\end{figure}
+
+
+\subsubsection{Autoregressive Integrated Moving Average (ARIMA)}
+\begin{figure}[H]
+  \centering
+\includegraphics[scale=0.3]{images/Binance result/64/ARIMA_BNB_64.png}\\
+  \caption{Autoregressive Integrated Moving Average results for Binance with ratio 6:4}
+  \label{fig:arima_bn_64}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+\includegraphics[scale=0.3]{images/Binance result/73/ARIMA_BNB_73.png}\\
+  \caption{Autoregressive Integrated Moving Average results for Binance with ratio 7:3}
+  \label{fig:arima_bn_73}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+\includegraphics[scale=0.3]{images/Binance result/82/ARIMA_BNB_82.png}
+  \caption{Autoregressive Integrated Moving Average results for Binance with ratio 8:2}
+  \label{fig:arima_bn_82}
+\end{figure}
+
+\subsubsection{Linear Regression}
+\begin{figure}[H]
+  \centering
+\includegraphics[scale=0.3]{images/Binance result/64/LR_BNB_64.png}\\
+  \caption{Linear Regression results for Binance with ratio 6:4}
+  \label{fig:arima_bn_64}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+\includegraphics[scale=0.3]{images/Binance result/73/LR_BNB_73.png}\\
+  \caption{Linear Regression results for Binance with ratio 7:3}
+  \label{fig:arima_bn_73}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+\includegraphics[scale=0.3]{images/Binance result/82/LR_BNB_82.png}
+  \caption{Linear Regression results for Binance with ratio 8:2}
+  \label{fig:arima_bn_82}
+\end{figure}
+
+
+
+\subsection{Bitcoin}
+\subsubsection{Long Short Term Memory}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.3]{images/Bitcoin result/6:4/LSTM_BTC_64.png}
+  \caption{LSTM model results for Bitcoin with ratio 6:4}
+  \label{fig:lstm_btc_64}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.3]{images/Bitcoin result/7:3/LSTM_BTC_73.png}
+  \caption{LSTM model results for Bitcoin with ratio 7:3}
+  \label{fig:lstm_btc_73}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.3]{images/Bitcoin result/8:2/LSTM_BTC_82.png}
+  \caption{LSTM model results for Bitcoin with ratio 8:2}
+  \label{fig:lstm_btc_82}
+\end{figure}
+\subsubsection{Seasonal Autoregressive Integrated
+Moving Average With Exogenous Factors
+(SARIMAX)}
+\begin{figure}[H]
+  \centering
+ \includegraphics[scale=0.3]{images/Bitcoin result/6:4/SARIMAX_64_BC.png}
+  \caption{SARIMAX model results for Bitcoin 
+  with ratio 6:4}
+  \label{fig:SARIMAX_64_BC}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.3]{images/Bitcoin result/7:3/SARIMAX.png}
+  \caption{SARIMAX model results for Bitcoin with ratio 7:3}
+  \label{fig:SARIMAX_73_BC}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+   \includegraphics[scale=0.3]{images/Bitcoin result/8:2/SARIMAX.png}
+  \caption{SARIMAX model results for Bitcoin with ratio 8:2}
+  \label{fig:SARIMAX_82_BC}
+\end{figure}
+  
+   
+\subsubsection{Gated Recurrent Unit}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.3]{images/Bitcoin result/6:4/GRU_BTC_64.png}
+  \caption{GRU model results for Bitcoin with ratio 6:4}
+  \label{fig:gru_btc_64}
+\end{figure}
+
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.3]{images/Bitcoin result/7:3/GRU_BTC_73.png}
+  \caption{GRU model results for Bitcoin with ratio 7:3}
+  \label{fig:gru_btc_73}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.3]{images/Bitcoin result/8:2/GRU_BTC_82.png}
+  \caption{GRU model results for Bitcoin with ratio 8:2}
+  \label{fig:gru_btc_82}
+\end{figure}
+
+\subsubsection{Recurrent Neural Network (RNN)}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.3]{images/Bitcoin result/6:4/RNN_BTC_64.png}
+  \caption{RNN model results for Bitcoin with ratio 6:4}
+  \label{fig:rnn_btc_64}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.3]{images/Bitcoin result/7:3/RNN_BTC_73.png}
+  \caption{RNN model results for Bitcoin with ratio 7:3}
+  \label{fig:rnn_btc_73}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.3]{images/Bitcoin result/8:2/RNN_BTC_82.png}
+  \caption{RNN model results for Bitcoin with ratio 8:2}
+  \label{fig:rnn_btc_82}
+\end{figure}
+
+\subsubsection{Stacking Model}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.3]{images/Bitcoin result/6:4/SM_BTC_64.png}
+  \caption{Stacking model results for Bitcoin with ratio 6:4}
+  \label{fig:sm_btc_64}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.3]{images/Bitcoin result/7:3/SM_BTC_73.png}
+  \caption{Stacking model results for Bitcoin with ratio 7:3}
+  \label{fig:sm_btc_73}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[scale=0.3]{images/Bitcoin result/8:2/SM_BTC_82.png}
+  \caption{Stacking model results for Bitcoin with ratio 8:2}
+  \label{fig:sm_btc_82}
+\end{figure}
+
+\subsubsection{Autoregressive Transformer}
+
+\begin{figure}[H]
+  \centering
+\includegraphics[scale=0.3]{images/Bitcoin result/6:4/Autoformer_BTC_64.png}
+  \caption{Autoregressive Transformer results for Bitcoin with ratio 6:4}
+  \label{fig:autoformer_btc_64}
+\end{figure}
+\begin{figure}[H]
+  \centering
+\includegraphics[scale=0.3]{images/Bitcoin result/7:3/Autoformer_BTC_73.png}
+  \caption{Autoregressive Transformer results for Bitcoin with ratio 7:3}
+  \label{fig:autoformer_btc_73}
+\end{figure}
+\begin{figure}[H]
+  \centering
+\includegraphics[scale=0.3]{images/Bitcoin result/8:2/Autoformer_BTC_82.png}
+  \caption{Autoregressive Transformer results for Bitcoin with ratio 8:2}
+  \label{fig:autoformer_btc_82}
+\end{figure}
+
+\subsubsection{Autoregressive Integrated Moving Average (ARIMA)}
+\begin{figure}[H]
+  \centering
+\includegraphics[scale=0.3]{images/Bitcoin result/6:4/ARIMA_BTC_64.png}\\
+  \caption{ARIMA model results for Bitcoin with ratio 6:4}
+  \label{fig:arima_btc_64}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+\includegraphics[scale=0.3]{images/Bitcoin result/7:3/ARIMA_BTC_73.png}\\
+  \caption{ARIMA model results for Bitcoin with ratio 7:3}
+  \label{fig:arima_btc_73}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+\includegraphics[scale=0.3]{images/Bitcoin result/8:2/ARIMA_BTC_82.png}\\ 
+  \caption{ARIMA model results for Bitcoin with ratio 8:2}
+  \label{fig:arima_btc_82}
+\end{figure}
+
+
+\subsubsection{Linear Regression}
+\begin{figure}[H]
+  \centering
+\includegraphics[scale=0.3]{images/Bitcoin result/6:4/LR_BTC_64.png}\\
+  \caption{Linear Regression model results for Bitcoin with ratio 6:4}
+  \label{fig:lr_btc_64}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+\includegraphics[scale=0.3]{images/Bitcoin result/7:3/LR_BTC_73.png}\\
+  \caption{Linear Regression model results for Bitcoin with ratio 7:3}
+  \label{fig:lr_btc_73}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+\includegraphics[scale=0.3]{images/Bitcoin result/8:2/LSTM_BTC_82.png}
+  \caption{Linear Regression model results for Bitcoin with ratio 8:2}
+  \label{fig:lr_btc_82}
+\end{figure}
+
+\subsection{Ethereum}
+
+\subsubsection{Long Short Term Memory}
+\begin{figure}[H]
+  \centering
+\includegraphics[scale=0.3]{images/Ethereum result/64/LSTM.png}\\
+  \caption{Long Short Term Memory for Ethereum with ratio 6:4}
+  \label{fig:lstm_eth_64}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+\includegraphics[scale=0.3]{images/Ethereum result/73/LTSMonETH73.png}\\
+  \caption{Long Short Term Memory for Ethereum with ratio 7:3}
+  \label{fig:lstm_eth_73}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+\includegraphics[scale=0.3]{images/Ethereum result/82/LSTM.png}\\
+  \caption{Long Short Term Memory for Ethereum with ratio 8:2}
+  \label{fig:lstm_eth_82}
+\end{figure}
+
+
+\subsubsection{Seasonal Autoregressive Integrated
+Moving Average With Exogenous Factors
+(SARIMAX)}
+\begin{figure}[H]
+  \centering
+\includegraphics[scale=0.3]{images/Ethereum result/64/SARIMAX.png}\\
+  \caption{SARIMAX for Ethereum with ratio 6:4}
+  \label{fig:sarimax_eth_64}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+\includegraphics[scale=0.3]{images/Ethereum result/73/SARIMAX.png}\\
+  \caption{SARIMAX for Ethereum with ratio 7:3}
+  \label{fig:sarimax_eth_73}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+\includegraphics[scale=0.3]{images/Ethereum result/82/SARIMAX.png}\\
+  \caption{SARIMAX for Ethereum with ratio 8:2}
+  \label{fig:sarimax_eth_73}
+\end{figure}
+
+\subsubsection{Gated recurrent unit}
+\begin{figure}[H]
+  \centering
+\includegraphics[scale=0.3]{images/Ethereum result/64/GRU.png}\
+  \caption{Gated recurrent unit for Ethereum with ratio 6:4}
+  \label{fig:gru_eth_64}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+\includegraphics[scale=0.3]{images/Ethereum result/73/GRU73.png}\\
+  \caption{Gated recurrent unit for Ethereum with ratio 7:3}
+  \label{fig:gru_eth_73}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+\includegraphics[scale=0.3]{images/Ethereum result/82/GRU.png}\\
+  \caption{Gated recurrent unit for Ethereum with ratio 8:2}
+  \label{fig:gru_eth_82}
+\end{figure}
+
+
+\subsubsection{Recurrent Neural Network (RNN)}
+
+\begin{figure}[H]
+  \centering
+\includegraphics[scale=0.3]{images/Ethereum result/64/RNN.png}\\
+  \caption{Gated recurrent unit for Ethereum with ratio 6:4}
+  \label{fig:rnn_eth_64}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+\includegraphics[scale=0.3]{images/Ethereum result/73/RNNonETH73.png}\\
+  \caption{Gated recurrent unit for Ethereum with ratio 7:3}
+  \label{fig:rnn_eth_73}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+\includegraphics[scale=0.3]{images/Ethereum result/82/RNN82.png}\\
+  \caption{Gated recurrent unit for Ethereum with ratio 8:2}
+  \label{fig:rnn_eth_82}
+\end{figure}
+
+
+\subsubsection{Stacking Model}
+\begin{figure}[H]
+  \centering
+\includegraphics[scale=0.3]{images/Ethereum result/64/SM_ETH_64.png}\\
+  \caption{Stacking Model for Ethereum with ratio 6:4}
+  \label{fig:stackmodel_eth_64}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+\includegraphics[scale=0.3]{images/Ethereum result/73/SM_ETH_73.png}\\
+  \caption{Stacking Model for Ethereum with ratio 7:3}
+  \label{fig:stackmodel_eth_73}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+\includegraphics[scale=0.3]{images/Ethereum result/82/SM_ETH_82.png}
+  \caption{Stacking Model for Ethereum with ratio 8:2}
+  \label{fig:stackmodel_eth_82}
+\end{figure}
+
+\subsubsection{Autoregressive Transformer}
+
+\begin{figure}[H]
+  \centering
+\includegraphics[scale=0.3]{images/Ethereum result/64/Autoformer_ETH_64.png}
+  \caption{Autoregressive Transformer results for Ethereum with ratio 6:4}
+  \label{fig:autoformer_eth_64}
+\end{figure}
+\begin{figure}[H]
+  \centering
+\includegraphics[scale=0.3]{images/Ethereum result/73/Autoformer_ETH_73.png}
+  \caption{Autoregressive Transformer results for Ethereum with ratio 7:3}
+  \label{fig:autoformer_eth_73}
+\end{figure}
+\begin{figure}[H]
+  \centering
+\includegraphics[scale=0.3]{images/Ethereum result/82/Autoformer_ETH_82.png}
+  \caption{Autoregressive Transformer results for Ethereum with ratio 8:2}
+  \label{fig:autoformer_eth_82}
+\end{figure}
+
+
+\subsubsection{Autoregressive Integrated Moving Average (ARIMA)}
+\begin{figure}[H]
+  \centering
+\includegraphics[scale=0.3]{images/Ethereum result/64/ARIMA.png}\\
+  \caption{ARIMA model for Ethereum with ratio 6:4}
+  \label{fig:AutoFormer_eth_64}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+\includegraphics[scale=0.3]{images/Ethereum result/73/ARIMA (2).png}\\
+  \caption{ARIMA model for Ethereum with ratio 7:3}
+  \label{fig:AutoFormer_eth_73}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+\includegraphics[scale=0.3]{images/Ethereum result/82/ARIMA.png}\\
+  \caption{ARIMA model for Ethereum with ratio 8:2}
+  \label{fig:AutoFormer_eth_82}
+\end{figure}
+
+\subsubsection{Linear Regression}
+\begin{figure}[H]
+  \centering
+\includegraphics[scale=0.3]{images/Ethereum result/64/LR.png}\\
+  \caption{Linear Regressionl for Ethereum with ratio 6:4}
+  \label{fig:LR_eth_64}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+\includegraphics[scale=0.3]{images/Ethereum result/73/LRonETH73.png}\\
+  \caption{Linear Regression for Ethereum with ratio 7:3}
+  \label{fig:LR_eth_73}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+\includegraphics[scale=0.3]{images/Ethereum result/82/LR.png}\\
+  \caption{Linear Regression for Ethereum with ratio 8:2}
+  \label{fig:LR_eth_82}
+\end{figure}
+
+
+
+\subsection{Evaluation result}
+\subsubsection{Binance}
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{|p{2cm}|>{\columncolor{lightgreen}}p{1.8cm}|>{\columncolor{lightpink}}p{1.8cm}|>{\columncolor{lightyellow}}p{1.8cm}|}
+\hline
+&\textbf{MAPE} & \textbf{MAE} & \textbf{RMSE} \\
+\hline
+\textbf{LSTM}  & 0.00814\% & 0.00456 & 0.00839 \\
+\hline
+\textbf{SARIMAX}  & 0.019\% & 5. &  7.64\\
+\hline
+\textbf{GRU}  & 0.00709\% & 0.00329 & 0.00498 \\
+\hline
+\textbf{RNN}  & 0.00755\% & 0.00299 & 0.00380 \\
+\hline
+\textbf{Stacking Model}  &0.0418\%  & 0.01684 & 0.01971 \\
+\hline
+\textbf{AutoFormer} & 0.05996\% & 19.45725 & 27.65591 \\
+\hline
+\textbf{ARIMA}  & 0.47998\% & 0.19555 & 0.20709 \\
+\hline
+\textbf{Linear Regression}  & 0.00792\% & 0.00366 & 0.00603 \\
+\hline
+\end{tabular}
+\caption{Performance metrics of models on Binance with ratio 6:4}
+\label{table:performance_metrics}
+\end{center}
+\end{table}
+
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{|p{2cm}|>{\columncolor{lightgreen}}p{1.8cm}|>{\columncolor{lightpink}}p{1.8cm}|>{\columncolor{lightyellow}}p{1.8cm}|}
+\hline
+&\textbf{MAPE} & \textbf{MAE} & \textbf{RMSE} \\
+\hline
+\textbf{LSTM}  & 0.02193\% & 0.01202 & 0.01703 \\
+\hline
+\textbf{SARIMAX}  & 0.021\% & 6.044 & 8.78 \\
+\hline
+\textbf{GRU}  & 0.00469\% & 0.00236 & 0.00409 \\
+\hline
+\textbf{RNN}  & 0.00696\% & 0.00300 & 0.00374 \\
+\hline
+\textbf{Stacking Model}  & 0.0265\% & 0.01408 & 0.01950 \\
+\hline
+\textbf{AutoFormer}  & 0.15692\% & 47.16330 & 79.98713\\
+\hline
+\textbf{ARIMA}  & 0.41310\% & 0.16570 & 0.18542 \\
+\hline
+\textbf{Linear Regression}  & 0.00663\% & 0.00329 & 0.00577 \\
+\hline
+\end{tabular}
+\caption{Performance metrics of models on Binance with ratio 7:3}
+\label{table:performance_metrics}
+\end{center}
+\end{table}
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{|p{2cm}|>{\columncolor{lightgreen}}p{1.8cm}|>{\columncolor{lightpink}}p{1.8cm}|>{\columncolor{lightyellow}}p{1.8cm}|}
+\hline
+&\textbf{MAPE} & \textbf{MAE} & \textbf{RMSE} \\
+\hline
+\textbf{LSTM}  & 0.00486\% & 0.00259 & 0.00445 \\
+\hline
+\textbf{SARIMAX}  & 0.019\% & 5.348 & 7.647 \\
+\hline
+\textbf{GRU}  & 0.00464\% & 0.00241 & 0.00422 \\
+\hline
+\textbf{RNN}  & 0.00339\% & 0.00199 & 0.00323 \\
+\hline
+\textbf{Stacking Model}  & 0.0103\%  & 0.00564 & 0.00883 \\
+\hline
+\textbf{AutoFormer}  & 0.21444\% & 58.74137 & 100.01680\\
+\hline
+\textbf{ARIMA}  & 0.31420\% & 0.16195 & 0.21247 \\
+\hline
+\textbf{Linear Regression}  & 0.00629\% & 0.00335 & 0.00606 \\
+\hline
+\end{tabular}
+\caption{Performance metrics of models on Binance with ratio 8:2}
+\label{table:performance_metrics}
+\end{center}
+\end{table}
+\subsubsection{Bitcoin}
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{|p{2cm}|>{\columncolor{lightgreen}}p{1.8cm}|>{\columncolor{lightpink}}p{1.8cm}|>{\columncolor{lightyellow}}p{1.8cm}|}
+\hline
+& \textbf{MAPE} & \textbf{MAE} & \textbf{RMSE} \\
+\hline
+\textbf{LSTM}  & 0.0648\% & 0.0332 & 0.0444 \\
+\hline
+\textbf{SARIMAX} & 0.022\% & 733.46 & 1134.73 \\
+\hline
+\textbf{GRU} & 0.0591\% & 0.0281 & 0.0351 \\
+\hline
+\textbf{RNN} & 0.0420\% & 0.0148 & 0.0193 \\
+\hline
+\textbf{Stacking Model} & 0.0659\% & 0.0226 & 0.0251 \\ 
+\hline
+\textbf{AutoFormer} & 0.12151\% & 3810.95721 & 6035.16388 \\
+\hline
+\textbf{ARIMA} & 0.5104\% & 0.2114 & 0.2751 \\
+\hline
+\textbf{Linear Regression} & 0.0064\% & 0.0029 & 0.0047 \\
+\hline
+\end{tabular}
+\caption{Performance metrics of models on Bitcoin with ratio 6:4}
+\label{table:performance_metrics}
+\end{center}
+\end{table}
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{|p{2cm}|>{\columncolor{lightgreen}}p{1.8cm}|>{\columncolor{lightpink}}p{1.8cm}|>{\columncolor{lightyellow}}p{1.8cm}|}
+\hline
+& \textbf{MAPE} & \textbf{MAE} & \textbf{RMSE} \\
+\hline
+\textbf{LSTM}  & 0.0445\% & 0.0154 & 0.0043 \\
+\hline
+\textbf{SARIMAX} & 0.021\% & 751.905 & 1159.18 \\
+\hline
+\textbf{GRU} & 0.0111\% & 0.0036 & 0.0043 \\
+\hline
+\textbf{RNN} & 0.0055\% & 0.0018 & 0.0022 \\
+\hline
+\textbf{Stacking Model} & 0.0217\% & 0.0068 & 0.0086 \\ 
+\hline
+\textbf{AutoFormer} & 0.11163\% & 4021.74695 & 5732.62403 \\
+\hline
+\textbf{ARIMA} & 0.5194\% & 0.1408 & 0.1711 \\
+\hline
+\textbf{Linear Regression} & 0.0064\% & 0.002 & 0.0032 \\
+\hline
+\end{tabular}
+\caption{Performance metrics of models on Bitcoin with ratio 7:3}
+\label{table:performance_metrics}
+\end{center}
+\end{table}
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{|p{2cm}|>{\columncolor{lightgreen}}p{1.8cm}|>{\columncolor{lightpink}}p{1.8cm}|>{\columncolor{lightyellow}}p{1.8cm}|}
+\hline
+& \textbf{MAPE} & \textbf{MAE} & \textbf{RMSE} \\
+\hline
+\textbf{LSTM}  & 0.0445\% & 0.0154 & 0.0043 \\
+\hline
+\textbf{SARIMAX} & 8.6345\% & 0.2441 & 0.343 \\
+\hline
+\textbf{GRU} & 0.0111\% & 0.0036 & 0.0043 \\
+\hline
+\textbf{RNN} & 0.0055\% & 0.0018 & 0.0022 \\
+\hline
+\textbf{Stacking Model} & 0.0217\% & 0.0068 & 0.0086 \\ 
+\hline
+\textbf{AutoFormer} & 0.15711\% & 6208.03209 & 8954.32896 \\
+\hline
+\textbf{ARIMA} & 0.5194\% & 0.1408 & 0.1711 \\
+\hline
+\textbf{Linear Regression} & 0.0064\% & 0.002 & 0.0032 \\
+\hline
+\end{tabular}
+\caption{Performance metrics of models on Bitcoin with ratio 8:2}
+\label{table:performance_metrics}
+\end{center}
+\end{table}
+\subsubsection{Ethereum}
+
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{|p{2cm}|>{\columncolor{lightgreen}}p{1.8cm}|>{\columncolor{lightpink}}p{1.8cm}|>{\columncolor{lightyellow}}p{1.8cm}|}
+\hline
+& \textbf{MAPE} & \textbf{MAE} & \textbf{RMSE} \\
+\hline
+\textbf{LSTM}  & 0.0072 & 0.0028&  0.0041 \\
+\hline
+\textbf{SARIMAX} & 0.029\% & 55.31 & 81.14 \\
+\hline
+\textbf{GRU} & 0.0194\% & 0.0073 & 0.0088 \\
+\hline
+\textbf{RNN} & 0.0085\% & 0.0031 & 0.0037 \\
+\hline
+\textbf{Stacking Model} & 0.058\% & 0.0227 & 0.025 \\ 
+\hline
+\textbf{AutoFormer} & 0.08533\% & 163.10719 & 224.13662 \\
+\hline
+\textbf{ARIMA} & 0.7638\% & 0.2423 & 0.2626 \\
+\hline
+\textbf{Linear Regression} & 0.0082\% & 0.0031 & 0.0686 \\
+\hline
+\end{tabular}
+\caption{Performance metrics of models on ETH with ratio 6:4}
+\label{table:performance_metrics}
+\end{center}
+\end{table}
+
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{|p{2cm}|>{\columncolor{lightgreen}}p{1.8cm}|>{\columncolor{lightpink}}p{1.8cm}|>{\columncolor{lightyellow}}p{1.8cm}|}\hline
+&\textbf{MAPE} & \textbf{MAE} & \textbf{RMSE} \\
+\hline
+\textbf{LSTM}  & 0.0077\% & 34 & 44 \\
+\hline
+\textbf{SARIMAX} & 0.024\% & 50.91 & 76.2 \\
+\hline
+\textbf{GRU} & 0.0241\% & 0.0102 & 0.0118\%\\
+\hline
+\textbf{RNN} & 0.006\% & 0.0027 & 0.0034\% \\
+\hline
+\textbf{GRU} & 0.0056\% & 0.0029 & 0.0043 \\
+\hline
+\textbf{RNN} & 0.0057\% & 0.0028 & 0.0034 \\
+\hline
+\textbf{Stacking Model} & 0.0140\% & 0.0074 & 0.114 \\ 
+\hline
+\textbf{AutoFormer} & 0.11531\% & 268.57162 & 407.57655 \\
+\hline
+\textbf{ARIMA} & 0.2178\% & 0.1287 & 0.1876 \\
+\hline
+\textbf{Linear Regression} & 0.064\% & 0.0033 & 0.0706 \\
+\hline
+\end{tabular}
+
+\caption{Performance metrics of models on ETH with ratio 8:2}
+\label{table:performance_metrics}
+\end{center}
+\end{table}
+
 \section{Conclusion}
-\subsection{Summary}
+The result indicates that deep learning models, namely LSTM and GRU, are more accurate and effective in historical price prediciton. All of which, LSTM proves to have the best performance across different crytocurrencies and train-test split ratio. On the other hand, ARIMA underperformed consistently due to its inability to cope with high votality and non-linearity of data. At the same time, by combining RNN and GRU and Linear Regression for stacking models, this method achieves a quite good result but it is not up to expectation. Lastly, ratio 8:2 and 7:3 results in a better performance with lower error over different models.
+\section{Future work}
+\indent\ Crytocurrency such as Bitcoin, Ethereum and Binance is characterized by its high votality and fluctuation, which is attributed by many outside factors. To better predict the price of them, more features such as political, economy news, market indicator fed into the models is neccessary and important. With an effort to conduct a more robust study of cryptocurrency price in the futre, we will dive deeper into more deep learning models and statiscal methods.
 
-\subsection{Future Considerations}
+%\section*{Acknowledgment}
+%\addcontentsline{toc}{section}{Acknowledgment}
 
-\section*{Acknowledgment}
-\addcontentsline{toc}{section}{Acknowledgment}
 \nocite{*}
 \bibliographystyle{IEEEannot}
 \bibliography{Ref}
